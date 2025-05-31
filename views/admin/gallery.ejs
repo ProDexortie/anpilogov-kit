@@ -1,0 +1,68 @@
+<% 
+const page = 'gallery';
+const heading = 'Управление галереей';
+const actionButton = `
+<a href="/admin/gallery/add" class="btn btn-primary">
+    <i class="bi bi-plus-circle"></i> Добавить изображение
+</a>
+`;
+
+let galleryGrid = '';
+if (items && items.length > 0) {
+    galleryGrid = `
+    <div class="row">
+        ${items.map(item => `
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                ${item.type === 'image' 
+                    ? `<img src="${item.image_url}" class="card-img-top" alt="${item.title}" style="height: 200px; object-fit: cover;">` 
+                    : `<div class="card-img-top bg-dark text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                         <i class="bi bi-film display-1"></i>
+                       </div>`}
+                <div class="card-body">
+                    <h5 class="card-title">${item.title}</h5>
+                    <p class="card-text">
+                        <span class="badge ${item.type === 'image' ? 'bg-info' : 'bg-success'}">
+                            ${item.type === 'image' ? 'Изображение' : 'Видео'}
+                        </span>
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a href="/admin/gallery/edit/${item.id}" class="btn btn-sm btn-primary">
+                            <i class="bi bi-pencil-fill"></i> Редактировать
+                        </a>
+                        <button class="btn btn-sm btn-danger" onclick="confirmDelete(${item.id}, '${item.title}')">
+                            <i class="bi bi-trash-fill"></i> Удалить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `).join('')}
+    </div>
+    
+    <form id="deleteForm" method="POST" style="display: none;"></form>
+    
+    <script>
+        function confirmDelete(id, title) {
+            if (confirm('Вы уверены, что хотите удалить "' + title + '" из галереи?')) {
+                const form = document.getElementById('deleteForm');
+                form.action = '/admin/gallery/delete/' + id;
+                form.submit();
+            }
+        }
+    </script>
+    `;
+} else {
+    galleryGrid = `
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle-fill"></i> Галерея пуста.
+    </div>
+    `;
+}
+
+const body = galleryGrid;
+%>
+
+<%- include('_page', { page, heading, actionButton, body }) %>

@@ -1,0 +1,91 @@
+<% 
+const page = 'applicants';
+const heading = 'Управление абитуриентами';
+const actionButton = `
+<a href="/admin/applicants/upload" class="btn btn-primary">
+    <i class="bi bi-upload"></i> Загрузить список абитуриентов
+</a>
+`;
+
+let specialtyFilter = '';
+if (specialties && specialties.length > 0) {
+    specialtyFilter = `
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Фильтр по специальности</h5>
+            <select class="form-select" id="specialty-filter" onchange="filterBySpecialty()">
+                <option value="all">Все специальности</option>
+                ${specialties.map(specialty => `
+                <option value="${specialty.id}">${specialty.code} ${specialty.name}</option>
+                `).join('')}
+            </select>
+        </div>
+    </div>
+    `;
+}
+
+let applicantsTable = '';
+if (applicants && applicants.length > 0) {
+    applicantsTable = `
+    ${specialtyFilter}
+    
+    <div class="table-responsive">
+        <table class="table table-striped table-hover" id="applicants-table">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>ФИО</th>
+                    <th>Специальность</th>
+                    <th>Средний балл</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${applicants.map((applicant, index) => `
+                <tr data-specialty="${applicant.specialty_id}">
+                    <td>${index + 1}</td>
+                    <td>${applicant.full_name}</td>
+                    <td>${applicant.code} ${applicant.specialty_name}</td>
+                    <td>${applicant.points}</td>
+                    <td>
+                        ${applicant.status === 'Бюджет' 
+                            ? '<span class="badge bg-success">Бюджет</span>' 
+                            : applicant.status === 'Внебюджет'
+                                ? '<span class="badge bg-warning text-dark">Внебюджет</span>'
+                                : applicant.status === 'СВО'
+                                    ? '<span class="badge bg-primary">СВО</span>'
+                                    : '<span class="badge bg-secondary">Ожидание</span>'}
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        function filterBySpecialty() {
+            const specialtyId = document.getElementById('specialty-filter').value;
+            const rows = document.querySelectorAll('#applicants-table tbody tr');
+            
+            rows.forEach(row => {
+                if (specialtyId === 'all' || row.getAttribute('data-specialty') === specialtyId) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+    `;
+} else {
+    applicantsTable = `
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle-fill"></i> Список абитуриентов пуст.
+    </div>
+    `;
+}
+
+const body = applicantsTable;
+%>
+
+<%- include('_page', { page, heading, actionButton, body }) %>

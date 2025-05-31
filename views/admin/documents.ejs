@@ -1,0 +1,76 @@
+<% 
+const page = 'documents';
+const heading = 'Управление документами';
+const actionButton = `
+<a href="/admin/documents/add" class="btn btn-primary">
+    <i class="bi bi-plus-circle"></i> Добавить документ
+</a>
+`;
+
+let documentsTable = '';
+if (documents && documents.length > 0) {
+    documentsTable = `
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Категория</th>
+                    <th>Файл</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${documents.map(document => `
+                <tr>
+                    <td>${document.name}</td>
+                    <td>
+                        ${document.category === 'admission' 
+                            ? '<span class="badge bg-primary">Приёмная комиссия</span>' 
+                            : '<span class="badge bg-secondary">Общие</span>'}
+                    </td>
+                    <td>
+                        ${document.file_url 
+                            ? `<a href="${document.file_url}" target="_blank" class="btn btn-sm btn-info text-white">
+                                 <i class="bi bi-file-earmark"></i> Просмотр
+                               </a>` 
+                            : '<span class="badge bg-warning text-dark">Не загружен</span>'}
+                    </td>
+                    <td>
+                        <a href="/admin/documents/edit/${document.id}" class="btn btn-sm btn-primary me-1">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger" onclick="confirmDelete(${document.id}, '${document.name}')">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    
+    <form id="deleteForm" method="POST" style="display: none;"></form>
+    
+    <script>
+        function confirmDelete(id, name) {
+            if (confirm('Вы уверены, что хотите удалить документ "' + name + '"?')) {
+                const form = document.getElementById('deleteForm');
+                form.action = '/admin/documents/delete/' + id;
+                form.submit();
+            }
+        }
+    </script>
+    `;
+} else {
+    documentsTable = `
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle-fill"></i> Список документов пуст.
+    </div>
+    `;
+}
+
+const body = documentsTable;
+%>
+
+<%- include('_page', { page, heading, actionButton, body }) %>
