@@ -1,0 +1,103 @@
+<% 
+const page = 'dashboard';
+const heading = 'Панель управления';
+const actionButton = '';
+
+const body = `
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="display-1 text-primary">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+                <h5 class="card-title">Специальности</h5>
+                <p class="card-text">Управление информацией о специальностях</p>
+                <a href="/admin/specialties" class="btn btn-primary">
+                    <i class="bi bi-arrow-right-circle"></i> Перейти
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="display-1 text-success">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <h5 class="card-title">Документы</h5>
+                <p class="card-text">Управление документами для абитуриентов</p>
+                <a href="/admin/documents" class="btn btn-success">
+                    <i class="bi bi-arrow-right-circle"></i> Перейти
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="display-1 text-info">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <h5 class="card-title">Абитуриенты</h5>
+                <p class="card-text">Управление списками абитуриентов</p>
+                <a href="/admin/applicants" class="btn btn-info text-white">
+                    <i class="bi bi-arrow-right-circle"></i> Перейти
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="display-1 text-warning">
+                    <i class="bi bi-currency-exchange"></i>
+                </div>
+                <h5 class="card-title">Бюджетные места</h5>
+                <p class="card-text">Управление лимитами бюджетных мест</p>
+                <a href="/admin/budget-limits" class="btn btn-warning text-dark">
+                    <i class="bi bi-arrow-right-circle"></i> Перейти
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="display-1 text-danger">
+                    <i class="bi bi-images"></i>
+                </div>
+                <h5 class="card-title">Галерея</h5>
+                <p class="card-text">Управление галереей "Жизнь в КИТ"</p>
+                <a href="/admin/gallery" class="btn btn-danger">
+                    <i class="bi bi-arrow-right-circle"></i> Перейти
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="display-1 text-secondary">
+                    <i class="bi bi-gear-fill"></i>
+                </div>
+                <h5 class="card-title">Настройки</h5>
+                <p class="card-text">Управление настройками бота</p>
+                <a href="/admin/settings" class="btn btn-secondary">
+                    <i class="bi bi-arrow-right-circle"></i> Перейти
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+`;
+%>
+
+<%- include('_page', { page, heading, actionButton, body }) %>

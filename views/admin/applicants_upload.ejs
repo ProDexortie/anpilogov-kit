@@ -1,0 +1,134 @@
+<%
+const page = 'applicants';
+const heading = 'Загрузка списка абитуриентов';
+const actionButton = `
+<a href="/admin/applicants" class="btn btn-secondary">
+    <i class="bi bi-arrow-left"></i> Назад
+</a>
+`;
+
+// Безопасная обработка переменной specialties
+let specialtyOptions = '';
+if (typeof specialties !== 'undefined' && specialties && specialties.length > 0) {
+    specialtyOptions = specialties.map(specialty => `
+        <option value="${specialty.id}">${specialty.code} ${specialty.name}</option>
+    `).join('');
+} else {
+    specialtyOptions = '<option value="" disabled>Нет доступных специальностей</option>';
+}
+
+// Переменные для отображения ошибок и успешных сообщений
+const errorMessage = typeof error !== 'undefined' && error ? error : null;
+const successMessage = typeof success !== 'undefined' && success ? success : null;
+
+const body = `
+<div class="card">
+    <div class="card-body">
+        <p class="card-text">
+            Загрузите Excel-файл со списком абитуриентов. Файл должен содержать следующие столбцы:
+        </p>
+        
+        <div class="alert alert-info">
+            <ul class="mb-0">
+                <li><strong>ФИО</strong> - Фамилия, имя и отчество абитуриента</li>
+                <li><strong>Средний балл</strong> - Средний балл аттестата</li>
+                <li><strong>Статус</strong> (необязательно) - Статус абитуриента (Бюджет, Внебюджет, СВО)</li>
+            </ul>
+        </div>
+        
+        <div class="mb-4">
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle"></i> Обратите внимание:
+                <ul class="mb-0 mt-2">
+                    <li>Загрузка файла заменит всех текущих абитуриентов для выбранной специальности</li>
+                    <li>Поддерживаются файлы форматов .xlsx и .xls</li>
+                    <li>Заголовки столбцов в файле должны в точности соответствовать указанным выше</li>
+                </ul>
+            </div>
+        </div>
+        
+        <form action="/admin/applicants/upload" method="POST" enctype="multipart/form-data">
+            <div class="mb-4">
+                <label for="specialty_id" class="form-label fw-bold">Выберите специальность</label>
+                <select class="form-select form-select-lg" id="specialty_id" name="specialty_id" required>
+                    <option value="">-- Выберите специальность --</option>
+                    ${specialtyOptions}
+                </select>
+                <div class="form-text">
+                    Абитуриенты будут добавлены к выбранной специальности.
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label for="applicants_file" class="form-label fw-bold">Excel-файл со списком абитуриентов</label>
+                <input type="file" class="form-control form-control-lg" id="applicants_file" name="applicants_file" required
+                       accept=".xlsx,.xls">
+                <div class="form-text">
+                    Выберите Excel-файл с данными абитуриентов.
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <a href="/admin/applicants" class="btn btn-secondary me-md-2">
+                    <i class="bi bi-x-circle"></i> Отмена
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-upload"></i> Загрузить список
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">Формат Excel-файла</h5>
+    </div>
+    <div class="card-body">
+        <p>Пример правильного формата данных в Excel-файле:</p>
+        
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>ФИО</th>
+                        <th>Средний балл</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Иванов Иван Иванович</td>
+                        <td>4.5</td>
+                        <td>Бюджет</td>
+                    </tr>
+                    <tr>
+                        <td>Петров Петр Петрович</td>
+                        <td>4.2</td>
+                        <td>Внебюджет</td>
+                    </tr>
+                    <tr>
+                        <td>Сидоров Сидор Сидорович</td>
+                        <td>3.8</td>
+                        <td>СВО</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="alert alert-info mt-3">
+            <p class="mb-0"><i class="bi bi-info-circle"></i> <strong>Примечание:</strong> Статусы "Бюджет" и "Внебюджет" будут определены автоматически на основе рейтинга и лимитов бюджетных мест. Статус "СВО" сохраняется как указано в файле.</p>
+        </div>
+    </div>
+</div>
+`;
+%>
+
+<%- include('_page', { 
+    page: page, 
+    heading: heading, 
+    actionButton: actionButton, 
+    body: body, 
+    error: errorMessage,
+    success: successMessage 
+}) %>

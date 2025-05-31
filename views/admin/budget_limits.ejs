@@ -1,0 +1,62 @@
+<% 
+const page = 'budget_limits';
+const heading = 'Лимиты бюджетных мест';
+const actionButton = '';
+
+const successMessage = req.query && req.query.success 
+    ? 'Лимиты бюджетных мест успешно обновлены.' 
+    : null;
+
+let limitsForm = '';
+if (limits && limits.length > 0) {
+    limitsForm = `
+    <div class="card">
+        <div class="card-body">
+            <form action="/admin/budget-limits/update" method="POST">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Код</th>
+                                <th>Специальность</th>
+                                <th>Бюджетных мест</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${limits.map(limit => `
+                            <tr>
+                                <td>${limit.code}</td>
+                                <td>${limit.name}</td>
+                                <td>
+                                    <input type="number" class="form-control" name="limit_${limit.specialty_id}" 
+                                           value="${limit.budget_limit}" min="0" required>
+                                </td>
+                            </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="alert alert-info mt-4">
+        <i class="bi bi-info-circle-fill"></i> После изменения лимитов статусы абитуриентов будут автоматически обновлены.
+    </div>
+    `;
+} else {
+    limitsForm = `
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle-fill"></i> Нет доступных специальностей для настройки лимитов.
+    </div>
+    `;
+}
+
+const body = limitsForm;
+%>
+
+<%- include('_page', { page, heading, actionButton, body, success: successMessage }) %>

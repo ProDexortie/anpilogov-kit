@@ -1,0 +1,55 @@
+<% 
+const page = 'documents';
+const heading = document ? 'Редактирование документа' : 'Добавление документа';
+const actionButton = `
+<a href="/admin/documents" class="btn btn-secondary">
+    <i class="bi bi-arrow-left"></i> Назад
+</a>
+`;
+
+const body = `
+<div class="card">
+    <div class="card-body">
+        <form action="${action}" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="name" class="form-label">Название документа</label>
+                <input type="text" class="form-control" id="name" name="name" required
+                       value="${document ? document.name : ''}">
+            </div>
+            
+            <div class="mb-3">
+                <label for="category" class="form-label">Категория</label>
+                <select class="form-select" id="category" name="category" required>
+                    <option value="admission" ${document && document.category === 'admission' ? 'selected' : ''}>
+                        Приёмная комиссия
+                    </option>
+                    <option value="general" ${document && document.category === 'general' ? 'selected' : ''}>
+                        Общие документы
+                    </option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="document_file" class="form-label">Файл</label>
+                <input type="file" class="form-control" id="document_file" name="document_file">
+                ${document && document.file_url ? `
+                <div class="mt-2">
+                    <small class="text-muted">Текущий файл:</small>
+                    <a href="${document.file_url}" target="_blank" class="d-block mt-1">
+                        <i class="bi bi-file-earmark-text"></i> ${document.name}
+                    </a>
+                </div>
+                ` : ''}
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <a href="/admin/documents" class="btn btn-secondary me-md-2">Отмена</a>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+`;
+%>
+
+<%- include('_page', { page, heading, actionButton, body }) %>

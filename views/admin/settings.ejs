@@ -1,0 +1,118 @@
+<% 
+const page = 'settings';
+const heading = 'Настройки бота';
+const actionButton = '';
+
+const successMessage = req.query && req.query.success 
+    ? req.query.success === 'password' 
+        ? 'Пароль администратора успешно изменен.' 
+        : 'Настройки успешно обновлены.' 
+    : null;
+
+const body = `
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Настройки приёмной комиссии</h5>
+            </div>
+            <div class="card-body">
+                <form action="/admin/settings/update" method="POST">
+                    <div class="mb-3">
+                        <label for="admission_schedule" class="form-label">График работы</label>
+                        <textarea class="form-control" id="admission_schedule" name="admission_schedule" rows="2">${settings.admission_schedule || ''}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="admission_address" class="form-label">Адрес</label>
+                        <input type="text" class="form-control" id="admission_address" name="admission_address"
+                               value="${settings.admission_address || ''}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="admission_phone" class="form-label">Телефон</label>
+                        <input type="text" class="form-control" id="admission_phone" name="admission_phone"
+                               value="${settings.admission_phone || ''}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="admission_email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="admission_email" name="admission_email"
+                               value="${settings.admission_email || ''}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="admission_responsible" class="form-label">Ответственный</label>
+                        <input type="text" class="form-control" id="admission_responsible" name="admission_responsible"
+                               value="${settings.admission_responsible || ''}">
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Настройки бота</h5>
+            </div>
+            <div class="card-body">
+                <form action="/admin/settings/update" method="POST">
+                    <div class="mb-3">
+                        <label for="welcome_message" class="form-label">Приветственное сообщение</label>
+                        <textarea class="form-control" id="welcome_message" name="welcome_message" rows="4">${settings.welcome_message || ''}</textarea>
+                        <div class="form-text">
+                            Вы можете использовать эмодзи в сообщении.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="admin_username" class="form-label">Имя пользователя администратора</label>
+                        <input type="text" class="form-control" id="admin_username" name="admin_username"
+                               value="${settings.admin_username || 'admin'}">
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Изменение пароля</h5>
+            </div>
+            <div class="card-body">
+                <form action="/admin/settings/change-password" method="POST">
+                    <div class="mb-3">
+                        <label for="current_password" class="form-label">Текущий пароль</label>
+                        <input type="password" class="form-control" id="current_password" name="current_password" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="new_password" class="form-label">Новый пароль</label>
+                        <input type="password" class="form-control" id="new_password" name="new_password" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">Подтверждение пароля</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning">Изменить пароль</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+`;
+%>
+
+<%- include('_page', { page, heading, actionButton, body, success: successMessage }) %>

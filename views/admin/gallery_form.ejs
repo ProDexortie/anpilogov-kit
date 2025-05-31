@@ -1,0 +1,54 @@
+<% 
+const page = 'gallery';
+const heading = item ? 'Редактирование изображения' : 'Добавление изображения';
+const actionButton = `
+<a href="/admin/gallery" class="btn btn-secondary">
+    <i class="bi bi-arrow-left"></i> Назад
+</a>
+`;
+
+const body = `
+<div class="card">
+    <div class="card-body">
+        <form action="${action}" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="title" class="form-label">Заголовок</label>
+                <input type="text" class="form-control" id="title" name="title" required
+                       value="${item ? item.title : ''}">
+            </div>
+            
+            <div class="mb-3">
+                <label for="type" class="form-label">Тип</label>
+                <select class="form-select" id="type" name="type">
+                    <option value="image" ${!item || item.type === 'image' ? 'selected' : ''}>Изображение</option>
+                    <option value="video" ${item && item.type === 'video' ? 'selected' : ''}>Видео</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="gallery_image" class="form-label">Файл</label>
+                <input type="file" class="form-control" id="gallery_image" name="gallery_image" 
+                       ${!item ? 'required' : ''} accept="image/*,video/*">
+                ${item && item.image_url ? `
+                <div class="mt-2">
+                    <small class="text-muted">Текущий файл:</small>
+                    ${item.type === 'image' 
+                        ? `<img src="${item.image_url}" alt="${item.title}" class="img-thumbnail mt-2" style="max-height: 200px;">` 
+                        : `<div class="mt-2">
+                             <i class="bi bi-film"></i> ${item.title}
+                           </div>`}
+                </div>
+                ` : ''}
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <a href="/admin/gallery" class="btn btn-secondary me-md-2">Отмена</a>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+`;
+%>
+
+<%- include('_page', { page, heading, actionButton, body }) %>
